@@ -74,6 +74,17 @@ Null_Allowed:          yes
 
 
 PARAMETER_TABLE:
+Parameter_Name:        t_embed
+Description:           "Metal strip thickness (for embedded model)"
+Data_Type:             real
+Default_Value:         35e-6
+Limits:                -
+Vector:                no
+Vector_Bounds:         -
+Null_Allowed:          yes
+
+
+PARAMETER_TABLE:
 Parameter_Name:        w
 Description:           "width"
 Data_Type:             real
@@ -86,7 +97,7 @@ Null_Allowed:          yes
 
 PARAMETER_TABLE:
 Parameter_Name:        model
-Description:           "Model type"
+Description:           "Model type (0-Hammerstad, 1-Kirsching, 2-Wheeler, 3-Schneider, 4-Embedded Hammerstad)"
 Data_Type:             int
 Default_Value:         0
 Limits:                -
@@ -124,6 +135,29 @@ Limits:                -
 Vector:                no
 Vector_Bounds:         -
 Null_Allowed:          yes
+
+
+PARAMETER_TABLE:
+Parameter_Name:        H1
+Description:           "Substrate thickness (for embedded model)"
+Data_Type:             real
+Default_Value:         1e-3
+Limits:                -
+Vector:                no
+Vector_Bounds:         -
+Null_Allowed:          yes
+
+
+PARAMETER_TABLE:
+Parameter_Name:        H2
+Description:           "Substrate thickness (for embedded model)"
+Data_Type:             real
+Default_Value:         0.0
+Limits:                -
+Vector:                no
+Vector_Bounds:         -
+Null_Allowed:          yes
+
 
 PARAMETER_TABLE:
 Parameter_Name:        t

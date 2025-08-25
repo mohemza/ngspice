@@ -27,6 +27,7 @@
 #define KIRSCHING 1
 #define WHEELER 2
 #define SCHNEIDER 3
+#define EMBEDDED_HAMMERSTAD 4
 
 
 // Dispersion model
@@ -53,7 +54,7 @@ void Kirschning_zl (double, double, double,
                     double*, double*);
 
 void mslineAnalyseQuasiStatic (double W, double h, double t,
-		double er, int Model,
+		double er, int Model, double H2,
 		double *ZlEff, double *ErEff,
 		double *WEff);
 

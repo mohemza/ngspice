@@ -58,10 +58,10 @@ static DoubleComplex rdivide(double n1, DoubleComplex n2)
 static double calcCend (double frequency, double W,
 			      double h, double t, double er,
 			      int SModel, int DModel,
-			      int Model, double H2) {
+			      int Model, double h2) {
 
   double ZlEff, ErEff, WEff, ZlEffFreq, ErEffFreq;
-  mslineAnalyseQuasiStatic (W, h, t, er, SModel, H2, &ZlEff, &ErEff, &WEff);
+  mslineAnalyseQuasiStatic (W, h, t, er, SModel, h2, &ZlEff, &ErEff, &WEff);
   mslineAnalyseDispersion  (WEff, h, er, ZlEff, ErEff, frequency, DModel,
 			      &ZlEffFreq, &ErEffFreq);
 
@@ -102,8 +102,8 @@ void cm_msopen (ARGS)
 
 	/* how to get properties of the substrate, e.g. Er, H */
 	double er    = PARAM(er);
-	double h     = (PARAM(model) == EMBEDDED_HAMMERSTAD) ? PARAM(H1) : PARAM(h);
-	double H2    = (PARAM(model) == EMBEDDED_HAMMERSTAD) ? PARAM(H2) : 0.0;
+	double h     = (PARAM(model) == EMBEDDED_HAMMERSTAD) ? PARAM(h1) : PARAM(h);
+	double h2    = (PARAM(model) == EMBEDDED_HAMMERSTAD) ? PARAM(h2) : 0.0;
 	double t     = (PARAM(model) == EMBEDDED_HAMMERSTAD) ? PARAM(t_embed) : PARAM(t);
 
 
@@ -111,7 +111,7 @@ void cm_msopen (ARGS)
     if(ANALYSIS == AC) {
 		if (Model == MSOPEN_ALEXOPOULOS) {
 			double ZlEff, ErEff, WEff, ZlEffFreq, ErEffFreq;
-			mslineAnalyseQuasiStatic (W, h, t, er, SModel, H2, &ZlEff, &ErEff, &WEff);
+			mslineAnalyseQuasiStatic (W, h, t, er, SModel, h2, &ZlEff, &ErEff, &WEff);
 			mslineAnalyseDispersion  (WEff, h, er, ZlEff, ErEff, RAD_FREQ/(2*M_PI), DModel,
 					&ZlEffFreq, &ErEffFreq);
 
@@ -144,7 +144,7 @@ void cm_msopen (ARGS)
 			ac_gain.imag = cimag(y);
 			AC_GAIN(p1, p1) = ac_gain;
 		} else {
-			double Ce = calcCend(RAD_FREQ/(2*M_PI), W, h, t, er, SModel, DModel, Model, H2);
+			double Ce = calcCend(RAD_FREQ/(2*M_PI), W, h, t, er, SModel, DModel, Model, h2);
 			ac_gain.real = 0.0;
 			ac_gain.imag = RAD_FREQ * Ce;
 			AC_GAIN(p1, p1) = ac_gain;

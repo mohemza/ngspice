@@ -29,12 +29,12 @@
           H2 = ground -> top of dielectric (top surface)
           b = max(H2 - h, 0)  // cover above the metal
 ------------------------------------------------------------------------- */
-static inline void ms_apply_buried(double h, double t_phys, double H2, double er,
+static inline void ms_apply_buried(double h, double t_phys, double h2, double er,
 		double *ZlEff, double *eps_eff){
 
 	if (!ZlEff || !eps_eff) return;
-	if (H2 <= 0.0) return;                       // no info provided → do nothing
-	const double b = H2 - h;          			 // cover thickness above metal
+	if (h2 <= 0.0) return;                       // no info provided → do nothing
+	const double b = h2 - h;          			 // cover thickness above metal
 	if (b <= 0.0) return;                        // not buried (or flush)
 	const double k = exp(-2.0 * b / h);
 	const double eps_bur = (*eps_eff) * k + er * (1.0 - k);
@@ -49,7 +49,7 @@ static inline void ms_apply_buried(double h, double t_phys, double H2, double er
  *  effective width due to the finite conductor thickness for the given
  *  microstrip line and substrate properties. */
 void mslineAnalyseQuasiStatic (double W, double h, double t,
-		double er, int Model, double H2,
+		double er, int Model, double h2,
 		double *ZlEff, double *ErEff,
 		double *WEff) {
 
@@ -185,7 +185,7 @@ void mslineAnalyseQuasiStatic (double W, double h, double t,
 		z = zr / sqrt (e);
 		e = e * sqr (z1 / zr);
 
-		ms_apply_buried(h, t_phys, H2, er, &z, &e);
+		ms_apply_buried(h, t_phys, h2, er, &z, &e);
 	}
 
 	*ZlEff = z;

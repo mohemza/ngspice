@@ -108,7 +108,7 @@ Null_Allowed:          yes
 
 
 PARAMETER_TABLE:
-Parameter_Name:        H1
+Parameter_Name:        h1
 Description:           "Substrate thickness (for embedded model)"
 Data_Type:             real
 Default_Value:         1e-3
@@ -119,7 +119,7 @@ Null_Allowed:          yes
 
 
 PARAMETER_TABLE:
-Parameter_Name:        H2
+Parameter_Name:        h2
 Description:           "Substrate thickness (for embedded model)"
 Data_Type:             real
 Default_Value:         0.0

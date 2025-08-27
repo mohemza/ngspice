@@ -58,12 +58,12 @@ static DoubleComplex rdivide(double n1, DoubleComplex n2)
 static double calcCend (double frequency, double W,
 			      double h, double t, double er,
 			      int SModel, int DModel,
-			      int Model, double h2, char *type) {
+			      int Model, double h2, int type) {
 
   double ZlEff, ErEff, WEff, ZlEffFreq, ErEffFreq;
   mslineAnalyseQuasiStatic (W, h, t, er, SModel, &ZlEff, &ErEff, &WEff);
 
-  if (strcmp(type, "Embedded") == 0) {
+  if (type == 1) {
     ms_apply_buried(h, t, h2, er, &ZlEff, &ErEff);
   }
 
@@ -107,10 +107,10 @@ void cm_msopen (ARGS)
 
 	/* how to get properties of the substrate, e.g. Er, H */
 	double er    = PARAM(er);
-	char *type = PARAM(Type);
-	double h     = (strcmp(type, "Embedded") == 0) ? PARAM(h1) : PARAM(h);
-	double h2    = (strcmp(type, "Embedded") == 0) ? PARAM(h2) : 0.0;
-	double t     = (strcmp(type, "Embedded") == 0) ? PARAM(t_embed) : PARAM(t);
+	int type = PARAM(Type);
+	double h     = (type == 1) ? PARAM(h1) : PARAM(h);
+	double h2    = (type == 1) ? PARAM(h2) : 0.0;
+	double t     = (type == 1) ? PARAM(t_embed) : PARAM(t);
 
 
     /* Compute the output */
@@ -119,7 +119,7 @@ void cm_msopen (ARGS)
 			double ZlEff, ErEff, WEff, ZlEffFreq, ErEffFreq;
 			mslineAnalyseQuasiStatic (W, h, t, er, SModel, &ZlEff, &ErEff, &WEff);
 
-			if (strcmp(type, "Embedded") == 0) {
+			if (type == 1) {
 				ms_apply_buried(h, t, h2, er, &ZlEff, &ErEff);
 			}
 

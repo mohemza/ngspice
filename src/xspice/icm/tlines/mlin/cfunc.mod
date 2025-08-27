@@ -58,7 +58,7 @@ static void cm_mline_callback(ARGS, Mif_Callback_Reason_t reason);
 
 static void calcPropagation (double W, int SModel, int DModel,
                              double er, double h, double t, double tand, double rho, double D,
-                             double frequency, double h2, char *type) {
+                             double frequency, double h2, int type) {
 
 	/* local variables */
 	double ac, ad;
@@ -68,7 +68,7 @@ static void calcPropagation (double W, int SModel, int DModel,
 	// the impedance of the microstrip line
 	mslineAnalyseQuasiStatic (W, h, t, er, SModel, &ZlEff, &ErEff, &WEff);
 
-	if (strcmp(type, "Embedded") == 0) {
+	if (type == 1) {
 		ms_apply_buried(h, t, h2, er, &ZlEff, &ErEff);
 	}
 
@@ -102,10 +102,10 @@ void cm_mlin (ARGS)
 
 	/* how to get properties of the substrate, e.g. Er, H */
 	double er    = PARAM(er);
-	char *type = PARAM(Type);
-	double h     = (strcmp(type, "Embedded") == 0) ? PARAM(h1) : PARAM(h);
-	double h2    = (strcmp(type, "Embedded") == 0) ? PARAM(h2) : 0.0;
-	double t     = (strcmp(type, "Embedded") == 0) ? PARAM(t_embed) : PARAM(t);
+	int type = PARAM(Type);
+	double h     = (type == 1) ? PARAM(h1) : PARAM(h);
+	double h2    = (type == 1) ? PARAM(h2) : 0.0;
+	double t     = (type == 1) ? PARAM(t_embed) : PARAM(t);
 	double tand  = PARAM(tand);
 	double rho   = PARAM(rho);
 	double D     = PARAM(d);

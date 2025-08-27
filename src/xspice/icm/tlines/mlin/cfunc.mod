@@ -66,7 +66,7 @@ static void calcPropagation (double W, int SModel, int DModel,
 
 	// quasi-static effective dielectric constant of substrate + line and
 	// the impedance of the microstrip line
-	mslineAnalyseQuasiStatic (W, h, t, er, SModel, h2, &ZlEff, &ErEff, &WEff);
+	mslineAnalyseQuasiStatic (W, h, t, er, SModel, &ZlEff, &ErEff, &WEff);
 
 	if (strcmp(type, "Embedded") == 0) {
 		ms_apply_buried(h, t, h2, er, &ZlEff, &ErEff);

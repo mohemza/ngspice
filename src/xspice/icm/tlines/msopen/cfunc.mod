@@ -61,7 +61,7 @@ static double calcCend (double frequency, double W,
 			      int Model, double h2, char *type) {
 
   double ZlEff, ErEff, WEff, ZlEffFreq, ErEffFreq;
-  mslineAnalyseQuasiStatic (W, h, t, er, SModel, h2, &ZlEff, &ErEff, &WEff);
+  mslineAnalyseQuasiStatic (W, h, t, er, SModel, &ZlEff, &ErEff, &WEff);
 
   if (strcmp(type, "Embedded") == 0) {
     ms_apply_buried(h, t, h2, er, &ZlEff, &ErEff);
@@ -117,7 +117,7 @@ void cm_msopen (ARGS)
     if(ANALYSIS == AC) {
 		if (Model == MSOPEN_ALEXOPOULOS) {
 			double ZlEff, ErEff, WEff, ZlEffFreq, ErEffFreq;
-			mslineAnalyseQuasiStatic (W, h, t, er, SModel, h2, &ZlEff, &ErEff, &WEff);
+			mslineAnalyseQuasiStatic (W, h, t, er, SModel, &ZlEff, &ErEff, &WEff);
 
 			if (strcmp(type, "Embedded") == 0) {
 				ms_apply_buried(h, t, h2, er, &ZlEff, &ErEff);

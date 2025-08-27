@@ -67,9 +67,9 @@ Null_Allowed:          yes
 
 PARAMETER_TABLE:
 Parameter_Name:        Type
-Description:           "Type of microstrip (set to ""Embedded"" for embedded microstrip)"
+Description:           "Type of microstrip (set to 'Embedded' for embedded microstrip)"
 Data_Type:             string
-Default_Value:         "Normal"
+Default_Value:         Normal
 Limits:                -
 Vector:                no
 Vector_Bounds:         -

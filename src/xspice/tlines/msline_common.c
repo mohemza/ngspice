@@ -26,7 +26,7 @@
  *  effective width due to the finite conductor thickness for the given
  *  microstrip line and substrate properties. */
 void mslineAnalyseQuasiStatic (double W, double h, double t,
-		double er, int Model, double h2,
+		double er, int Model,
 		double *ZlEff, double *ErEff,
 		double *WEff) {
 

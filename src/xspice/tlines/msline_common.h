@@ -76,7 +76,7 @@ void Kirschning_zl (double, double, double,
                     double*, double*);
 
 void mslineAnalyseQuasiStatic (double W, double h, double t,
-		double er, int Model, double h2,
+		double er, int Model,
 		double *ZlEff, double *ErEff,
 		double *WEff);
 

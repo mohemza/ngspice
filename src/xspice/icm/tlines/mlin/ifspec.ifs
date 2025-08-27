@@ -107,7 +107,7 @@ Null_Allowed:          yes
 
 
 PARAMETER_TABLE:
-Parameter_Name:        Type
+Parameter_Name:        type
 Description:           "Type of microstrip (0=Normal, 1=Embedded)"
 Data_Type:             int
 Default_Value:         0

@@ -107,7 +107,7 @@ void cm_msopen (ARGS)
 
 	/* how to get properties of the substrate, e.g. Er, H */
 	double er    = PARAM(er);
-	int type = PARAM(Type);
+	int type = PARAM(type);
 	double h     = (type == 1) ? PARAM(h1) : PARAM(h);
 	double h2    = (type == 1) ? PARAM(h2) : 0.0;
 	double t     = (type == 1) ? PARAM(t_embed) : PARAM(t);

@@ -21,29 +21,6 @@
 #include "tline_common.h"
 #include "msline_common.h"
 
-/* --- Buried/embedded microstrip mixing (Wadell 3.5.4.2–3): -------------
-   eps_bur = eps_surf*exp(-2 b/h) + er*(1 - exp(-2 b/h))
-   Z0_emb  = Z0_surf * sqrt(eps_surf / eps_bur)
-   Here:  h = H1 (ground -> bottom of metal)
-          t_phys = metal thickness (same units as h)
-          H2 = ground -> top of dielectric (top surface)
-          b = max(H2 - h, 0)  // cover above the metal
-------------------------------------------------------------------------- */
-static inline void ms_apply_buried(double h, double t_phys, double h2, double er,
-		double *ZlEff, double *eps_eff){
-
-	if (!ZlEff || !eps_eff) return;
-	if (h2 <= 0.0) return;                       // no info provided → do nothing
-	const double b = h2 - h;          			 // cover thickness above metal
-	if (b <= 0.0) return;                        // not buried (or flush)
-	const double k = exp(-2.0 * b / h);
-	const double eps_bur = (*eps_eff) * k + er * (1.0 - k);
-	if (eps_bur > 0.0) {
-		*ZlEff = (*ZlEff) * sqrt((*eps_eff) / eps_bur);
-		*eps_eff = eps_bur;
-	}
-}
-
 /* This function calculates the quasi-static impedance of a microstrip
  *  line, the value of the effective dielectric constant and the
  *  effective width due to the finite conductor thickness for the given
@@ -153,39 +130,6 @@ void mslineAnalyseQuasiStatic (double W, double h, double t,
 		// including strip thickness effects
 		z = zr / sqrt (e);
 		e = e * sqr (z1 / zr);
-	}
-	// EMBEDDED HAMMERSTAD and JENSEN
-	else if (Model == EMBEDDED_HAMMERSTAD) {
-		double a, b, du1, du, u, ur, u1, zr, z1;
-		double t_phys = t;
-
-		u = W / h; // normalized width
-		t = t / h; // normalized thickness
-
-		// compute strip thickness effect
-		if (t != 0) {
-			du1 = t / M_PI * log (1 + 4 * M_E / t / sqr (coth (sqrt (6.517 * u))));
-		}
-		else du1 = 0;
-		du = du1 * (1 + sech (sqrt (er - 1))) / 2;
-		u1 = u + du1;
-		ur = u + du;
-		*WEff = ur * h;
-
-		// compute impedances for homogeneous medium
-		Hammerstad_zl (ur, &zr);
-		Hammerstad_zl (u1, &z1);
-
-		// compute effective dielectric constant
-		Hammerstad_ab (ur, er, &a, &b);
-		Hammerstad_er (ur, er, a, b, &e);
-
-		// compute final characteristic impedance and dielectric constant
-		// including strip thickness effects
-		z = zr / sqrt (e);
-		e = e * sqr (z1 / zr);
-
-		ms_apply_buried(h, t_phys, h2, er, &z, &e);
 	}
 
 	*ZlEff = z;

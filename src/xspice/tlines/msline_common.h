@@ -27,7 +27,6 @@
 #define KIRSCHING 1
 #define WHEELER 2
 #define SCHNEIDER 3
-#define EMBEDDED_HAMMERSTAD 4
 
 
 // Dispersion model
@@ -38,6 +37,29 @@
 #define GETSINGER 4
 #define DISP_SCHNEIDER 5
 #define PRAMANICK 6
+
+/* --- Buried/embedded microstrip mixing (Wadell 3.5.4.2–3): -------------
+   eps_bur = eps_surf*exp(-2 b/h) + er*(1 - exp(-2 b/h))
+   Z0_emb  = Z0_surf * sqrt(eps_surf / eps_bur)
+   Here:  h = H1 (ground -> bottom of metal)
+          t_phys = metal thickness (same units as h)
+          h2 = ground -> top of dielectric (top surface)
+          b = max(h2 - h, 0)  // cover above the metal
+------------------------------------------------------------------------- */
+static inline void ms_apply_buried(double h, double t_phys, double h2, double er,
+		double *ZlEff, double *eps_eff){
+
+	if (!ZlEff || !eps_eff) return;
+	if (h2 <= 0.0) return;                       // no info provided → do nothing
+	const double b = h2 - h;          			 // cover thickness above metal
+	if (b <= 0.0) return;                        // not buried (or flush)
+	const double k = exp(-2.0 * b / h);
+	const double eps_bur = (*eps_eff) * k + er * (1.0 - k);
+	if (eps_bur > 0.0) {
+		*ZlEff = (*ZlEff) * sqrt((*eps_eff) / eps_bur);
+		*eps_eff = eps_bur;
+	}
+}
 
 void Hammerstad_ab (double, double,
                     double*, double*);

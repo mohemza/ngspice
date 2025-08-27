@@ -97,9 +97,20 @@ Null_Allowed:          yes
 
 PARAMETER_TABLE:
 Parameter_Name:        model
-Description:           "Model type (0-Hammerstad, 1-Kirsching, 2-Wheeler, 3-Schneider, 4-Embedded Hammerstad)"
+Description:           "Model type (0-Hammerstad, 1-Kirsching, 2-Wheeler, 3-Schneider)"
 Data_Type:             int
 Default_Value:         0
+Limits:                -
+Vector:                no
+Vector_Bounds:         -
+Null_Allowed:          yes
+
+
+PARAMETER_TABLE:
+Parameter_Name:        Type
+Description:           "Type of microstrip (set to ""Embedded"" for embedded microstrip)"
+Data_Type:             string
+Default_Value:         "Normal"
 Limits:                -
 Vector:                no
 Vector_Bounds:         -

@@ -58,10 +58,15 @@ static DoubleComplex rdivide(double n1, DoubleComplex n2)
 static double calcCend (double frequency, double W,
 			      double h, double t, double er,
 			      int SModel, int DModel,
-			      int Model, double h2) {
+			      int Model, double h2, char *type) {
 
   double ZlEff, ErEff, WEff, ZlEffFreq, ErEffFreq;
   mslineAnalyseQuasiStatic (W, h, t, er, SModel, h2, &ZlEff, &ErEff, &WEff);
+
+  if (strcmp(type, "Embedded") == 0) {
+    ms_apply_buried(h, t, h2, er, &ZlEff, &ErEff);
+  }
+
   mslineAnalyseDispersion  (WEff, h, er, ZlEff, ErEff, frequency, DModel,
 			      &ZlEffFreq, &ErEffFreq);
 
@@ -102,9 +107,10 @@ void cm_msopen (ARGS)
 
 	/* how to get properties of the substrate, e.g. Er, H */
 	double er    = PARAM(er);
-	double h     = (PARAM(model) == EMBEDDED_HAMMERSTAD) ? PARAM(h1) : PARAM(h);
-	double h2    = (PARAM(model) == EMBEDDED_HAMMERSTAD) ? PARAM(h2) : 0.0;
-	double t     = (PARAM(model) == EMBEDDED_HAMMERSTAD) ? PARAM(t_embed) : PARAM(t);
+	char *type = PARAM(Type);
+	double h     = (strcmp(type, "Embedded") == 0) ? PARAM(h1) : PARAM(h);
+	double h2    = (strcmp(type, "Embedded") == 0) ? PARAM(h2) : 0.0;
+	double t     = (strcmp(type, "Embedded") == 0) ? PARAM(t_embed) : PARAM(t);
 
 
     /* Compute the output */
@@ -112,6 +118,11 @@ void cm_msopen (ARGS)
 		if (Model == MSOPEN_ALEXOPOULOS) {
 			double ZlEff, ErEff, WEff, ZlEffFreq, ErEffFreq;
 			mslineAnalyseQuasiStatic (W, h, t, er, SModel, h2, &ZlEff, &ErEff, &WEff);
+
+			if (strcmp(type, "Embedded") == 0) {
+				ms_apply_buried(h, t, h2, er, &ZlEff, &ErEff);
+			}
+
 			mslineAnalyseDispersion  (WEff, h, er, ZlEff, ErEff, RAD_FREQ/(2*M_PI), DModel,
 					&ZlEffFreq, &ErEffFreq);
 
@@ -144,7 +155,7 @@ void cm_msopen (ARGS)
 			ac_gain.imag = cimag(y);
 			AC_GAIN(p1, p1) = ac_gain;
 		} else {
-			double Ce = calcCend(RAD_FREQ/(2*M_PI), W, h, t, er, SModel, DModel, Model, h2);
+			double Ce = calcCend(RAD_FREQ/(2*M_PI), W, h, t, er, SModel, DModel, Model, h2, type);
 			ac_gain.real = 0.0;
 			ac_gain.imag = RAD_FREQ * Ce;
 			AC_GAIN(p1, p1) = ac_gain;

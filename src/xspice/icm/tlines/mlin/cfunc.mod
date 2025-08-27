@@ -58,7 +58,7 @@ static void cm_mline_callback(ARGS, Mif_Callback_Reason_t reason);
 
 static void calcPropagation (double W, int SModel, int DModel,
                              double er, double h, double t, double tand, double rho, double D,
-                             double frequency, double h2) {
+                             double frequency, double h2, char *type) {
 
 	/* local variables */
 	double ac, ad;
@@ -67,6 +67,10 @@ static void calcPropagation (double W, int SModel, int DModel,
 	// quasi-static effective dielectric constant of substrate + line and
 	// the impedance of the microstrip line
 	mslineAnalyseQuasiStatic (W, h, t, er, SModel, h2, &ZlEff, &ErEff, &WEff);
+
+	if (strcmp(type, "Embedded") == 0) {
+		ms_apply_buried(h, t, h2, er, &ZlEff, &ErEff);
+	}
 
 	// analyse dispersion of Zl and Er (use WEff here?)
 	mslineAnalyseDispersion (W, h, er, ZlEff, ErEff, frequency, DModel,
@@ -98,9 +102,10 @@ void cm_mlin (ARGS)
 
 	/* how to get properties of the substrate, e.g. Er, H */
 	double er    = PARAM(er);
-	double h     = (PARAM(model) == EMBEDDED_HAMMERSTAD) ? PARAM(h1) : PARAM(h);
-	double h2    = (PARAM(model) == EMBEDDED_HAMMERSTAD) ? PARAM(h2) : 0.0;
-	double t     = (PARAM(model) == EMBEDDED_HAMMERSTAD) ? PARAM(t_embed) : PARAM(t);
+	char *type = PARAM(Type);
+	double h     = (strcmp(type, "Embedded") == 0) ? PARAM(h1) : PARAM(h);
+	double h2    = (strcmp(type, "Embedded") == 0) ? PARAM(h2) : 0.0;
+	double t     = (strcmp(type, "Embedded") == 0) ? PARAM(t_embed) : PARAM(t);
 	double tand  = PARAM(tand);
 	double rho   = PARAM(rho);
 	double D     = PARAM(d);
@@ -116,7 +121,7 @@ void cm_mlin (ARGS)
 	/* Compute the output */
 	if(ANALYSIS == DC) {
 
-		calcPropagation(W,SModel,DModel,er,h,t,tand,rho,D,0, h2);
+		calcPropagation(W,SModel,DModel,er,h,t,tand,rho,D,0, h2, type);
 	    double V1 = INPUT(V1sens);
 		double V2 = INPUT(V2sens);
 		double I1 = INPUT(port1);
@@ -130,7 +135,7 @@ void cm_mlin (ARGS)
 	}
 	else if(ANALYSIS == AC) {
 	    double frequency = RAD_FREQ/(2.0*M_PI);
-		calcPropagation(W,SModel,DModel,er,h,t,tand,rho,D,frequency, h2);
+		calcPropagation(W,SModel,DModel,er,h,t,tand,rho,D,frequency, h2, type);
 #ifdef _MSC_VER
 		DoubleComplex g = _Cbuild(alpha, beta);
 		DoubleComplex _Z11 = rdivide(zl, ctanh(_Cmulcr(g, l)));
@@ -152,7 +157,7 @@ void cm_mlin (ARGS)
 		AC_GAIN(port1,port2) = z21; AC_GAIN(port2,port1) = z21;
 	}
 	else if(ANALYSIS == TRANSIENT) {
-		calcPropagation(W,SModel,DModel,er,h,t,tand,rho,D,0, h2);
+		calcPropagation(W,SModel,DModel,er,h,t,tand,rho,D,0, h2, type);
         sim_points = &(STATIC_VAR(sim_points_data));
         double time = TIME;
 		double V1 = INPUT(V1sens);
